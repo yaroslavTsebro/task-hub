@@ -843,6 +843,13 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
+"@testcontainers/mongodb@^10.16.0":
+  version "10.16.0"
+  resolved "https://registry.yarnpkg.com/@testcontainers/mongodb/-/mongodb-10.16.0.tgz#55fc4b791b2d29c3b41bd36f069eeb5185731f67"
+  integrity sha512-ZYD2uv/iRrBD4mFxiLjtaRJ0d2AmpTMv6p94WoVkTsXZ4mX7Q81SPdS58NDh8ucgshVc1adJ9kEsh7tgDbIGrQ==
+  dependencies:
+    testcontainers "^10.16.0"
+
 "@tsconfig/node10@^1.0.7":
   version "1.0.11"
   resolved "https://registry.yarnpkg.com/@tsconfig/node10/-/node10-1.0.11.tgz#6ee46400685f130e278128c7b38b7e031ff5b2f2"
