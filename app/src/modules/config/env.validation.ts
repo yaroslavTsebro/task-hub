@@ -1,5 +1,5 @@
 import { plainToInstance } from 'class-transformer';
-import { IsNotEmpty, IsString, validateSync } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumberString, validateSync } from 'class-validator';
 
 export class EnvVariables {
   @IsNotEmpty()
@@ -13,6 +13,14 @@ export class EnvVariables {
   @IsNotEmpty()
   @IsString()
   PORT: string;
+
+  @IsNotEmpty()
+  @IsNumberString()
+  ACCESS_TOKEN_EXPIRATION: string;
+
+  @IsNotEmpty()
+  @IsNumberString()
+  REFRESH_TOKEN_EXPIRATION: string;
 }
 
 export function validateEnv(config: Record<string, unknown>) {
