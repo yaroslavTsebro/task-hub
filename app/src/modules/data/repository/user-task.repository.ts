@@ -12,6 +12,11 @@ export class UserTaskRepository {
     return this.mapToDomain(ut);
   }
 
+  async findByUser(userId: string): Promise<IUserTask[]> {
+    const userTaskDocs = await this.userTaskDao.findByUser(userId);
+    return userTaskDocs.map((doc) => this.mapToDomain(doc));
+  }
+
   async findByUserAndTask(userId: string, taskId: string): Promise<IUserTask | null> {
     const ut = await this.userTaskDao.findByUserAndTask(userId, taskId);
     return ut ? this.mapToDomain(ut) : null;

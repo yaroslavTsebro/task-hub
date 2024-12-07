@@ -14,6 +14,10 @@ export class UserTaskDao {
     return userTask.save();
   }
 
+  async findByUser(userId: string): Promise<UserTaskDocument[]> {
+    return this.userTaskModel.find({ userId: new Types.ObjectId(userId) }).exec();
+  }
+
   async findByUserAndTask(userId: string, taskId: string): Promise<UserTaskDocument | null> {
     const typedUserId = new Types.ObjectId(userId);
     const typedTaskId = new Types.ObjectId(taskId);

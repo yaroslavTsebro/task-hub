@@ -5,9 +5,11 @@ import { DataModule } from './modules/data/data.module';
 import { JwtModule } from './modules/jwt/jwt.module';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { ProjectModule } from './modules/project/project.module';
+import { TaskModule } from './modules/task/task.module';
 
 @Module({
-  providers: [ConfigModule, DaoModule, DataModule, JwtModule, AuthModule, UserModule],
+  providers: [ConfigModule, DaoModule, DataModule, JwtModule, AuthModule, UserModule, ProjectModule, TaskModule],
   imports: [UserModule],
 })
 export class AppModule { }
