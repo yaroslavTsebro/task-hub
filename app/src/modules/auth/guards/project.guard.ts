@@ -1,8 +1,8 @@
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { PROJECT_ROLES_KEY } from '../decorators/project-roles.decorator';
+import { PROJECT_ROLES_KEY } from '../../../shared/decorators/project-roles.decorator';
 import { UserProjectRepository } from 'src/modules/data/repository/user-project.repository';
-import { UserProjectRole } from '../dto/entities/user-project';
+import { UserProjectRole } from '../../../shared/dto/entities/user-project';
 
 @Injectable()
 export class ProjectGuard implements CanActivate {

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Project, ProjectDocument } from 'src/shared/dto/entities/project';
 
 @Injectable()
@@ -13,11 +13,13 @@ export class ProjectDao {
   }
 
   async findById(id: string): Promise<ProjectDocument | null> {
-    return this.projectModel.findById(id).exec();
+    const objectId = new Types.ObjectId(id);
+    return this.projectModel.findById(objectId).exec();
   }
 
   async update(id: string, update: Partial<Project>): Promise<ProjectDocument | null> {
-    return this.projectModel.findByIdAndUpdate(id, update, { new: true }).exec();
+    const objectId = new Types.ObjectId(id);
+    return this.projectModel.findByIdAndUpdate(objectId, update, { new: true }).exec();
   }
 
   async findAll(): Promise<ProjectDocument[]> {
