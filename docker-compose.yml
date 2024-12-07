@@ -1,0 +1,51 @@
+version: '3.9'
+
+services:
+  gateway:
+    image: nginx:latest
+    container_name: gateway
+    ports:
+      - "8080:80"
+    volumes:
+      - ./gateway/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - app
+      - db
+    networks:
+      - task_network
+    restart: always
+
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: task_hub
+    ports:
+      - "80:80"
+    env_file:
+      - ./app/.env
+    depends_on:
+      - db
+    networks:
+      - task_network
+    restart: always
+
+  db:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./db/data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: adminUser
+      MONGO_INITDB_ROOT_PASSWORD: securePassword
+      MONGO_INITDB_DATABASE: task_hub
+    networks:
+      - task_network
+    restart: always
+
+networks:
+  task_network:
