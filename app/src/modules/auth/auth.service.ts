@@ -11,6 +11,8 @@ import { UserRepository } from '../data/repository/user.repository';
 export class AuthService {
   private readonly accessTokenExpiration: number;
   private readonly refreshTokenExpiration: number;
+  private readonly refreshTokenSecret: string;
+  private readonly accessTokenSecret: string;
 
   constructor(
     private readonly userRepo: UserRepository,
@@ -19,6 +21,9 @@ export class AuthService {
   ) {
     this.accessTokenExpiration = this.configService.get<number>('ACCESS_TOKEN_EXPIRATION', 900);
     this.refreshTokenExpiration = this.configService.get<number>('REFRESH_TOKEN_EXPIRATION', 604800);
+
+    this.refreshTokenSecret = this.configService.get<string>('JWT_REFRESH_SECRET');
+    this.accessTokenSecret = this.configService.get<string>('JWT_ACCESS_SECRET');
   }
 
   async register(dto: RegisterDto) {
@@ -47,7 +52,7 @@ export class AuthService {
   async refreshToken(dto: RefreshDto) {
     const { token } = dto;
 
-    const payload = this.jwtService.verify(token, process.env.JWT_REFRESH_SECRET);
+    const payload = this.jwtService.verify(token, this.refreshTokenSecret);
 
     const user = await this.userRepo.findById(payload.sub);
     if (!user) throw new UnauthorizedException('User not found');
@@ -58,8 +63,8 @@ export class AuthService {
   private generateTokens(userId: string, email: string) {
     const payload = { sub: userId, email };
 
-    const accessToken = this.jwtService.sign(payload, process.env.JWT_ACCESS_SECRET, { expiresIn: `${this.accessTokenExpiration}s` });
-    const refreshToken = this.jwtService.sign(payload, process.env.JWT_REFRESH_SECRET, { expiresIn: `${this.refreshTokenExpiration}s` });
+    const accessToken = this.jwtService.sign(payload, this.accessTokenSecret, { expiresIn: `${this.accessTokenExpiration}s` });
+    const refreshToken = this.jwtService.sign(payload, this.refreshTokenSecret, { expiresIn: `${this.refreshTokenExpiration}s` });
 
     return { accessToken, refreshToken };
   }

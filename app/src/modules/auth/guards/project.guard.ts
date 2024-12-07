@@ -20,7 +20,7 @@ export class ProjectGuard implements CanActivate {
 
     const requiredRoles = this.reflector.get<UserProjectRole[]>(PROJECT_ROLES_KEY, context.getHandler()) || [];
 
-    const userProject = await this.userProjectRepo.findByUserAndProject(user.sub, projectId);
+    const userProject = await this.userProjectRepo.findByUserAndProject(user.id, projectId);
 
     if (!userProject) { throw new ForbiddenException('You are not a member of this project'); }
     if (requiredRoles.length === 0) { return true; }

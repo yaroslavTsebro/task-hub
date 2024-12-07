@@ -9,8 +9,8 @@ import { ITask } from 'src/shared/contracts/entity/task';
 export class TaskRepository {
   constructor(private readonly taskDao: TaskDao) {}
 
-  async create(dto: CreateTaskDto): Promise<ITask> {
-    const task = await this.taskDao.create(dto);
+  async create(dto: CreateTaskDto, projectId: string): Promise<ITask> {
+    const task = await this.taskDao.create(dto, projectId);
     return this.mapToDomain(task);
   }
 

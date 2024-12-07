@@ -24,7 +24,9 @@ export class UserProjectDao {
   async findByUserAndProject(userId: string, projectId: string): Promise<UserProjectDocument | null> {
     const userObjectId = new Types.ObjectId(userId);
     const projectObjectId = new Types.ObjectId(projectId);
-
+    console.log(userObjectId)
+    console.log(projectObjectId)
+    
     return this.userProjectModel.findOne({ userId: userObjectId, projectId: projectObjectId }).exec();
   }
 

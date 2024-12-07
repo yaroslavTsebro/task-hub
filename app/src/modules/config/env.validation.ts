@@ -18,6 +18,12 @@ export class EnvVariables {
   @IsNumberString()
   ACCESS_TOKEN_EXPIRATION: string;
 
+  @IsString()
+  JWT_ACCESS_SECRET: string;
+
+  @IsString()
+  JWT_REFRESH_SECRET: string;
+
   @IsNotEmpty()
   @IsNumberString()
   REFRESH_TOKEN_EXPIRATION: string;

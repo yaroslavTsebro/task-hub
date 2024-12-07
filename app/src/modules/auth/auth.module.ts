@@ -5,11 +5,15 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { AuthorizationGuard } from './guards/authorization.guard';
 import { ProjectGuard } from './guards/project.guard';
+import { UserModule } from '../user/user.module';
+import { ConfigModule } from '../config/config.module';
 
 @Module({
   imports: [
     JwtModule,
-    DataModule
+    DataModule,
+    UserModule,
+    ConfigModule
   ],
   controllers: [AuthController],
   providers: [AuthService, AuthorizationGuard, ProjectGuard],

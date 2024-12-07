@@ -9,7 +9,6 @@ import { ProjectModule } from './modules/project/project.module';
 import { TaskModule } from './modules/task/task.module';
 
 @Module({
-  providers: [ConfigModule, DaoModule, DataModule, JwtModule, AuthModule, UserModule, ProjectModule, TaskModule],
-  imports: [UserModule],
+  imports: [ConfigModule, DaoModule, DataModule, JwtModule, AuthModule, UserModule, ProjectModule, TaskModule]
 })
 export class AppModule { }

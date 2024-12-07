@@ -20,19 +20,19 @@ export class TaskService {
     private readonly projectRepo: ProjectRepository,
   ) { }
 
-  async createTask(createTaskDto: CreateTaskDto, user: IUser) {
-    const project = await this.projectRepo.findById(createTaskDto.projectId);
+  async createTask(projectId: string, createTaskDto: CreateTaskDto, user: IUser) {
+    const project = await this.projectRepo.findById(projectId);
     if (!project) {
       throw new NotFoundException('Project not found');
     }
 
-    const task = await this.taskRepo.create(createTaskDto);
+    const task = await this.taskRepo.create(createTaskDto, projectId);
 
     await this.userTaskRepo.assignUserToTask(user.id, task.id, UserTaskStatus.PERFORMER);
     return task;
   }
 
-  async assignTaskToUser(taskId: string, assignTaskDto: AssignTaskDto, user: IUser) {
+  async assignTaskToUser(taskId: string, assignTaskDto: AssignTaskDto) {
     const task = await this.taskRepo.findById(taskId);
     if (!task) { throw new NotFoundException('Task not found'); }
 
@@ -54,9 +54,7 @@ export class TaskService {
 
   async changeTaskStatus(taskId: string, changeStatusDto: ChangeStatusDto, user: IUser) {
     const task = await this.taskRepo.findById(taskId);
-    if (!task) {
-      throw new NotFoundException('Task not found');
-    }
+    if (!task) { throw new NotFoundException('Task not found'); }
 
     return this.taskRepo.changeStatus(taskId, changeStatusDto.status);
   }
@@ -65,12 +63,12 @@ export class TaskService {
     const task = await this.taskRepo.findById(taskId);
     if (!task) { throw new NotFoundException('Task not found'); }
 
-    const userTask = await this.userTaskRepo.findByUserAndTask(user.id, taskId);
+    await this.userTaskRepo.findByUserAndTask(user.id, taskId);
 
     return this.taskRepo.update(taskId, updateTaskDto);
   }
 
-  async getAllTasks(getTasksDto: GetTasksDto, user: IUser) {
+  async getAllTasks(projectId: string, getTasksDto: GetTasksDto) {
     const { page = '1', limit = '10', sort, status } = getTasksDto;
     const pagination = {
       page: parseInt(page, 10),
@@ -82,7 +80,7 @@ export class TaskService {
       filters.status = status;
     }
 
-    let sortOptions: any = {};
+    let sortOptions: any = { projectId };
     if (sort && Array.isArray(sort)) {
       sort.forEach((s) => {
         sortOptions[s.field] = s.order === 'asc' ? 1 : -1;
@@ -94,14 +92,14 @@ export class TaskService {
     return this.taskRepo.findAll(pagination, filters, sortOptions);
   }
 
-  async getUserTasks(getTasksDto: GetTasksDto, user: IUser) {
+  async getUserTasks(projectId: string, getTasksDto: GetTasksDto, user: IUser) {
     const { page = '1', limit = '10', sort, status } = getTasksDto;
     const pagination = {
       page: parseInt(page, 10),
       limit: parseInt(limit, 10),
     };
 
-    const filters: any = {};
+    const filters: any = { projectId };
     if (status) {
       filters.status = status;
     }

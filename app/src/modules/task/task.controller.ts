@@ -23,33 +23,33 @@ import { ProjectGuard } from '../auth/guards/project.guard';
 import { GetTasksDto } from 'src/shared/dto/task/get';
 
 @ApiTags('tasks')
-@Controller('task')
+@Controller()
 @UseGuards(AuthorizationGuard, ProjectGuard)
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
-  @Post()
+  @Post('/projects/:projectId/tasks')
   @ApiOperation({ summary: 'Create a new task' })
   @ProjectRoles()
   async createTask(
+    @Param('projectId') projectId: string,
     @Body() createTaskDto: CreateTaskDto,
     @CurrentUser() user: IUser,
   ) {
-    return this.taskService.createTask(createTaskDto, user);
+    return this.taskService.createTask(projectId, createTaskDto, user);
   }
 
-  @Post(':id/assign-user')
+  @Post('/projects/:projectId/tasks/:id/assign-user')
   @ApiOperation({ summary: 'Assign a user to a task' })
   @ProjectRoles(UserProjectRole.OWNER, UserProjectRole.ADMIN)
   async assignTaskToUser(
     @Param('id') taskId: string,
     @Body() assignTaskDto: AssignTaskDto,
-    @CurrentUser() user: IUser,
   ) {
-    return this.taskService.assignTaskToUser(taskId, assignTaskDto, user);
+    return this.taskService.assignTaskToUser(taskId, assignTaskDto);
   }
 
-  @Post(':id/assign-yourself')
+  @Post('/projects/:projectId/tasks/:id/assign-yourself')
   @ApiOperation({ summary: 'Assign yourself to a task' })
   @ProjectRoles()
   async assignYourselfToTask(
@@ -59,7 +59,7 @@ export class TaskController {
     return this.taskService.assignYourselfToTask(taskId, user);
   }
 
-  @Patch(':id/change-status')
+  @Patch('/projects/:projectId/tasks/:id/change-status')
   @ApiOperation({ summary: 'Change the status of a task' })
   @ProjectRoles()
   async changeTaskStatus(
@@ -70,7 +70,7 @@ export class TaskController {
     return this.taskService.changeTaskStatus(taskId, changeStatusDto, user);
   }
 
-  @Patch(':id')
+  @Patch('/projects/:projectId/tasks/:id')
   @ApiOperation({ summary: 'Update a task' })
   @ProjectRoles()
   async updateTask(
@@ -81,23 +81,24 @@ export class TaskController {
     return this.taskService.updateTask(taskId, updateTaskDto, user);
   }
 
-  @Get()
+  @Get('/projects/:projectId/tasks')
   @ApiOperation({ summary: 'Get all tasks' })
   @ProjectRoles()
   async getAllTasks(
+    @Param('projectId') projectId: string,
     @Query() getTasksDto: GetTasksDto,
-    @CurrentUser() user: IUser,
   ) {
-    return this.taskService.getAllTasks(getTasksDto, user);
+    return this.taskService.getAllTasks(projectId, getTasksDto);
   }
 
-  @Get('my-tasks')
+  @Get('/projects/:projectId/my-tasks')
   @ApiOperation({ summary: 'Get all tasks you are involved in' })
   @ProjectRoles()
   async getUserTasks(
+    @Param('projectId') projectId: string,
     @Query() getTasksDto: GetTasksDto,
     @CurrentUser() user: IUser,
   ) {
-    return this.taskService.getUserTasks(getTasksDto, user);
+    return this.taskService.getUserTasks(projectId, getTasksDto, user);
   }
 }

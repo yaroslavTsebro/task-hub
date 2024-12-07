@@ -52,16 +52,16 @@ export class AuthController {
   @ApiOperation({ summary: 'Logout user' })
   @HttpCode(HttpStatus.OK)
   async logout(@Res({ passthrough: true }) res: Response) {
-    res.cookie('accessToken', '', { httpOnly: true, secure: true, sameSite: 'strict', expires: new Date(0) });
+    res.cookie('accessToken', '', { httpOnly: true, sameSite: 'strict', expires: new Date(0) });
 
-    res.cookie('refreshToken', '', { httpOnly: true, secure: true, sameSite: 'strict', expires: new Date(0) });
+    res.cookie('refreshToken', '', { httpOnly: true, sameSite: 'strict', expires: new Date(0) });
 
     return { message: 'User logged out successfully' };
   }
 
   private setCookies(res: Response, accessToken: string, refreshToken: string) {
-    res.cookie('accessToken', accessToken, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: this.accessTokenExpiration });
+    res.cookie('accessToken', accessToken, { httpOnly: true, sameSite: 'strict', maxAge: this.accessTokenExpiration });
 
-    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true, sameSite: 'strict', maxAge: this.refreshTokenExpiration });
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, sameSite: 'strict', maxAge: this.refreshTokenExpiration });
   }
 }

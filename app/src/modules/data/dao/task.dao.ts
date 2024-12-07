@@ -9,8 +9,8 @@ import { UpdateTaskDto } from 'src/shared/dto/task/update';
 export class TaskDao {
   constructor(@InjectModel(Task.name) private taskModel: Model<TaskDocument>) { }
 
-  async create(dto: CreateTaskDto): Promise<TaskDocument> {
-    const task = new this.taskModel(dto);
+  async create(dto: CreateTaskDto, projectId: string): Promise<TaskDocument> {
+    const task = new this.taskModel({...dto, projectId});
     return task.save();
   }
 

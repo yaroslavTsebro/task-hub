@@ -8,7 +8,7 @@ import {
   Body,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { ProjectService } from './project.service';
 import { IUser } from 'src/shared/contracts/entity/user';
 import { CurrentUser } from 'src/shared/decorators/current-user.decorator';
@@ -28,6 +28,7 @@ export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a new project' })
   async createProject(
     @Body() createProjectDto: CreateProjectDto,
     @CurrentUser() user: IUser,
@@ -36,6 +37,8 @@ export class ProjectController {
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Update project details' })
+  @ApiParam({ name: 'id', description: 'Project ID' })
   @UseGuards(ProjectGuard)
   @ProjectRoles(UserProjectRole.OWNER, UserProjectRole.ADMIN)
   async updateProject(
@@ -46,12 +49,14 @@ export class ProjectController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get all projects for the current user' })
   async getAllProjects(@CurrentUser() user: IUser) {
     return this.projectService.getAllProjects(user);
   }
 
-
   @Post(':id/users/invite')
+  @ApiOperation({ summary: 'Invite a user to the project' })
+  @ApiParam({ name: 'id', description: 'Project ID' })
   @UseGuards(ProjectGuard)
   @ProjectRoles(UserProjectRole.OWNER, UserProjectRole.ADMIN)
   async inviteUser(
@@ -62,6 +67,8 @@ export class ProjectController {
   }
 
   @Delete(':id/users/remove')
+  @ApiOperation({ summary: 'Remove a user from the project' })
+  @ApiParam({ name: 'id', description: 'Project ID' })
   @UseGuards(ProjectGuard)
   @ProjectRoles(UserProjectRole.OWNER, UserProjectRole.ADMIN)
   async removeUser(
@@ -71,8 +78,9 @@ export class ProjectController {
     return this.projectService.removeUserFromProject(projectId, userId);
   }
 
-
   @Patch(':id/users/change-role')
+  @ApiOperation({ summary: 'Change user role in the project' })
+  @ApiParam({ name: 'id', description: 'Project ID' })
   @UseGuards(ProjectGuard)
   @ProjectRoles(UserProjectRole.OWNER, UserProjectRole.ADMIN)
   async changeUserRole(
