@@ -28,6 +28,11 @@ export class ProjectRepository {
     return project ? this.mapToDomain(project) : null;
   }
 
+  async findByIds(ids: string[]): Promise<IProject[]> {
+    const projectDocs = await this.projectDao.findByIds(ids);
+    return projectDocs.map((doc) => this.mapToDomain(doc));
+  }
+
   private mapToDomain(doc: ProjectDocument): IProject {
     return {
       id: doc._id.toString(),

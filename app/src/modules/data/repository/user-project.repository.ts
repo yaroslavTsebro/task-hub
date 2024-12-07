@@ -12,6 +12,11 @@ export class UserProjectRepository {
     return this.mapToDomain(up);
   }
 
+  async findProjectsByUser(userId: string): Promise<IUserProject[]> {
+    const userProjectDocs = await this.userProjectDao.findByUser(userId);
+    return userProjectDocs.map((doc) => this.mapToDomain(doc));
+  }
+
   async findByUserAndProject(userId: string, projectId: string): Promise<IUserProject | null> {
     const up = await this.userProjectDao.findByUserAndProject(userId, projectId);
     return up ? this.mapToDomain(up) : null;
@@ -27,8 +32,9 @@ export class UserProjectRepository {
     return up ? this.mapToDomain(up) : null;
   }
 
-  async remove(userProjectId: string): Promise<IUserProject | null> {
-    const up = await this.userProjectDao.remove(userProjectId);
+  async remove(userId: string, projectId): Promise<IUserProject | null> {
+    const connection = await this.userProjectDao.findByUserAndProject(userId, projectId);
+    const up = await this.userProjectDao.remove(connection._id.toString());
     return up ? this.mapToDomain(up) : null;
   }
 

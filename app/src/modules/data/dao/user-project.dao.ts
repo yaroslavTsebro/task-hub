@@ -15,6 +15,12 @@ export class UserProjectDao {
     return userProject.save();
   }
 
+  async findByUser(userId: string): Promise<UserProjectDocument[]> {
+    return this.userProjectModel
+      .find({ userId: new Types.ObjectId(userId) })
+      .exec();
+  }
+
   async findByUserAndProject(userId: string, projectId: string): Promise<UserProjectDocument | null> {
     const userObjectId = new Types.ObjectId(userId);
     const projectObjectId = new Types.ObjectId(projectId);
